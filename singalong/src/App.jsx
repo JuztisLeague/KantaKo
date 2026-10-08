@@ -22,14 +22,12 @@ function handleJoinRoom(){
   setJoinMessage("Please enter a room code");
   return;
 }
-  if (roomCode.trim().toUpperCase() === roomName.toUpperCase()) {
+// TEMP: compares against the Create Room input until the backend exists
+  if (roomCode.trim().toUpperCase() === roomName.trim().toUpperCase()) {
   setJoinMessage(`Joining ${roomName} ...`);
   return;
  }
  setJoinMessage(`Invalid Room Code`);
-
- 
-
 }
 
 
