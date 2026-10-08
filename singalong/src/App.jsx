@@ -3,7 +3,9 @@ import './App.css'
 
 function App() {
   const [roomName, setRoomName] = useState("");
+  const [roomCode, setRoomCode] = useState("");
   const [createdRoom, setCreatedRoom] = useState(null);
+  const [joinMessage, setJoinMessage] = useState(null);
 
 function handleCreateRoom() {
   
@@ -12,8 +14,24 @@ function handleCreateRoom() {
     return;
   }
     setCreatedRoom(`Room "${roomName}" created!`);
-   
 }
+
+function handleJoinRoom(){
+
+ if (!roomCode.trim()) {
+  setJoinMessage("Please enter a room code");
+  return;
+}
+  if (roomCode.trim().toUpperCase() === roomName.toUpperCase()) {
+  setJoinMessage(`Joining ${roomName} ...`);
+  return;
+ }
+ setJoinMessage(`Invalid Room Code`);
+
+ 
+
+}
+
 
   return (
     <div>
@@ -25,6 +43,14 @@ function handleCreateRoom() {
       placeholder="Room Name" />
       <button  onClick={handleCreateRoom}>Create Room</button>
      {createdRoom && <p>{createdRoom}</p>}
+
+     <input 
+      value={roomCode}
+      onChange={(e) => 
+      setRoomCode(e.target.value)}
+      placeholder="Room Code" />
+      <button onClick={handleJoinRoom}>Join Room</button>
+      {joinMessage && <p>{joinMessage}</p>}
     </div>
 
   )}
