@@ -32,24 +32,27 @@ function handleJoinRoom(){
 
 
   return (
-    <div>
+    <div className='main-app'>
       <h1>KantaKo 🎤</h1>
-      <input 
-      value={roomName}
-      onChange={(e) => 
-      setRoomName(e.target.value)}
-      placeholder="Room Name" />
-      <button  onClick={handleCreateRoom}>Create Room</button>
-     {createdRoom && <p>{createdRoom}</p>}
-
-     <input 
-      value={roomCode}
-      onChange={(e) => 
-      setRoomCode(e.target.value)}
-      placeholder="Room Code" />
-      <button onClick={handleJoinRoom}>Join Room</button>
-      {joinMessage && <p>{joinMessage}</p>}
+      <p>Your videoke night, on your phone.</p>
+      <div className='card'>
+          <input 
+            value={roomName}
+            onChange={(e) => 
+            setRoomName(e.target.value)}
+            placeholder="Room Name" />
+            <button  onClick={handleCreateRoom}>Create Room</button>
+            {createdRoom && <p>{createdRoom}</p>}
+      </div>
+      <div className='card'>
+          <input 
+            value={roomCode}
+            onChange={(e) => 
+            setRoomCode(e.target.value)}
+            placeholder="Room Code" />
+            <button onClick={handleJoinRoom}>Join Room</button>
+            {joinMessage && <p>{joinMessage}</p>}
+      </div>
     </div>
-
   )}
 export default App
