@@ -33,7 +33,7 @@ function handleJoinRoom(){
 
   return (
     <div>
-      <h1>SingAlong 🎤</h1>
+      <h1>KantaKo 🎤</h1>
       <input 
       value={roomName}
       onChange={(e) => 
