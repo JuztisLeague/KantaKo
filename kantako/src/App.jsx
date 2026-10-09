@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import './App.css'
+import { useState } from 'react';
+import {UserRoundPlus,  DoorClosedCog} from 'lucide-react';
+import './App.css';
 
 function App() {
   const [roomName, setRoomName] = useState("");
@@ -35,7 +36,10 @@ function handleJoinRoom(){
     <div className='main-app'>
       <h1>KantaKo 🎤</h1>
       <p>Your videoke night, on your phone.</p>
-      <div className='card'>
+      <div className='room'>
+        <div className='card'>
+          <DoorClosedCog size={100} color='#CC7F3B'/>
+          <div className="create-room">Create Room</div>
           <input 
             value={roomName}
             onChange={(e) => 
@@ -45,6 +49,9 @@ function handleJoinRoom(){
             {createdRoom && <p>{createdRoom}</p>}
       </div>
       <div className='card'>
+          
+          <UserRoundPlus size={100} color='#CC7F3B' />
+          <div className="join-room">Join Room</div>
           <input 
             value={roomCode}
             onChange={(e) => 
@@ -52,6 +59,7 @@ function handleJoinRoom(){
             placeholder="Room Code" />
             <button onClick={handleJoinRoom}>Join Room</button>
             {joinMessage && <p>{joinMessage}</p>}
+      </div>
       </div>
     </div>
   )}
