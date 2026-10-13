@@ -34,7 +34,7 @@ KantaKo is a web app for karaoke nights with friends and family. One person host
 - Mobile-friendly responsive layout, tested on a real phone
 - Client-side routing with a dynamic room page at `/room/:roomId`
 
-  **In progress**
+**In progress**
 
 - Random room code generation
 - Navigating to the room page after creating or joining a room
