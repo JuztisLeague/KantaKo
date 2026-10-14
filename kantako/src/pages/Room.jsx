@@ -7,7 +7,7 @@ const location = useLocation();
 
 const name = location.state?.roomName || "Unnamed room";
 return(
-    <div>
+    <div className='main-app'>
         <h1> {name} </h1>
         <p>Room Code: {roomId}</p>
     </div>
