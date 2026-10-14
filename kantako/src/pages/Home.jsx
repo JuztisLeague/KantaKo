@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import {UserRoundPlus,  DoorClosedCog} from 'lucide-react';
+import generateRoomCode from '../utils/generateRoomCode';
+import { useNavigate } from 'react-router-dom';
 import '../App.css';
 
 function Home() {
@@ -7,14 +9,20 @@ function Home() {
   const [roomCode, setRoomCode] = useState("");
   const [createdRoom, setCreatedRoom] = useState(null);
   const [joinMessage, setJoinMessage] = useState(null);
-
+  const [createdCode, setCreatedCode] = useState("");
+  
 function handleCreateRoom() {
   
   if (!roomName.trim()){
     setCreatedRoom(`Room not created due to no name`);
     return;
   }
-    setCreatedRoom(`Room "${roomName}" created!`);
+  const navigate = useNavigate();
+  const code = generateRoomCode();
+  navigate(`/room/${code}`);
+  setCreatedCode(code);
+  setCreatedRoom(`Room "${roomName}" created! Your Room Code: "${code}"`);
+  
 }
 
 function handleJoinRoom(){
@@ -23,8 +31,7 @@ function handleJoinRoom(){
   setJoinMessage("Please enter a room code");
   return;
 }
-// TEMP: compares against the Create Room input until the backend exists
-  if (roomCode.trim().toUpperCase() === roomName.trim().toUpperCase()) {
+  if (roomCode.trim().toUpperCase() === createdCode) {
   setJoinMessage(`Joining ${roomName} ...`);
   return;
  }
@@ -46,7 +53,7 @@ function handleJoinRoom(){
             setRoomName(e.target.value)}
             placeholder="Room Name" />
             <button  onClick={handleCreateRoom}>Create Room</button>
-            {createdRoom && <p>{createdRoom}</p>}
+            {createdRoom && <p className='message'>{createdRoom}</p>}
       </div>
       <div className='card'>
           
@@ -58,7 +65,7 @@ function handleJoinRoom(){
             setRoomCode(e.target.value)}
             placeholder="Room Code" />
             <button onClick={handleJoinRoom}>Join Room</button>
-            {joinMessage && <p>{joinMessage}</p>}
+            {joinMessage && <p className='message'>{joinMessage}</p>}
       </div>
       </div>
     </div>

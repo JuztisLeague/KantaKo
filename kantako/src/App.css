@@ -81,3 +81,7 @@ input::placeholder{
     flex-direction: column;
   }
 }
+
+.message{
+  color: var(--accent);
+}

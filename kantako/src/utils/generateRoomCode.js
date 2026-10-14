@@ -1,6 +1,6 @@
 
 function generateRoomCode() {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+  const chars = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
   let code = "";
 
   for (let i = 0; i < 6; i++) {
