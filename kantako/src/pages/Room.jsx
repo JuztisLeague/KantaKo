@@ -1,12 +1,16 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import '../App.css';
 
 function Room() {
 const { roomId } = useParams();
+const location = useLocation();
+
+const name = location.state?.roomName || "Unnamed room";
 return(
+    <div>
+        <h1> {name} </h1>
+        <p>Room Code: {roomId}</p>
+    </div>
 
-<h1>Room Code: {roomId}</h1>
 
-)}
-
-export default Room
+)}export default Room

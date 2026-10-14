@@ -85,3 +85,7 @@ input::placeholder{
 .message{
   color: var(--accent);
 }
+
+a {
+  color: var(--text);
+}

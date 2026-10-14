@@ -9,20 +9,16 @@ function Home() {
   const [roomCode, setRoomCode] = useState("");
   const [createdRoom, setCreatedRoom] = useState(null);
   const [joinMessage, setJoinMessage] = useState(null);
-  const [createdCode, setCreatedCode] = useState("");
-  
+   const navigate = useNavigate();
 function handleCreateRoom() {
   
   if (!roomName.trim()){
     setCreatedRoom(`Room not created due to no name`);
     return;
   }
-  const navigate = useNavigate();
+ 
   const code = generateRoomCode();
-  navigate(`/room/${code}`);
-  setCreatedCode(code);
-  setCreatedRoom(`Room "${roomName}" created! Your Room Code: "${code}"`);
-  
+  navigate(`/room/${code}`, { state: { roomName } });
 }
 
 function handleJoinRoom(){
@@ -31,11 +27,13 @@ function handleJoinRoom(){
   setJoinMessage("Please enter a room code");
   return;
 }
-  if (roomCode.trim().toUpperCase() === createdCode) {
-  setJoinMessage(`Joining ${roomName} ...`);
+  // TEMP: only checks the length until the backend can verify real rooms
+  const code = roomCode.trim().toUpperCase();
+  if (code.length !== 6) {
+  setJoinMessage(`Invalid Room Code`);
   return;
  }
- setJoinMessage(`Invalid Room Code`);
+ navigate(`/room/${code}`);
 }
 
 
