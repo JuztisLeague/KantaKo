@@ -1,6 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Room from './pages/Room';
+import generateRoomCode from './utils/generateRoomCode';
+
+console.log(generateRoomCode());
 
 function App() {
   return (
