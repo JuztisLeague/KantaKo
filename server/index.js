@@ -1,9 +1,12 @@
 import 'dotenv/config';
 import express from 'express';
+import { createRoom, getRoom, toPublicRoom } from './rooms.js';
 
 const app = express();
 const PORT = 3001;
 const API_KEY = process.env.YOUTUBE_API_KEY;
+
+app.use(express.json()); 
 
 if (!API_KEY) {
   console.error('Missing YOUTUBE_API_KEY in server/.env');
@@ -58,6 +61,28 @@ app.get('/api/search', async (req, res) => {
     res.status(502).json({ error: 'Could not reach YouTube' });
   }
 });
+
+app.post('/api/rooms', (req, res) => {
+  const name = String(req.body?.name ?? '').trim();
+
+  if (!name) {
+    return res.status(400).json({ error: 'Room name is required' });
+  }
+
+  const room = createRoom(name);
+  res.status(201).json({ code: room.code, hostToken: room.hostToken });
+});
+
+app.get('/api/rooms/:code', (req, res) => {
+  const room = getRoom(req.params.code);
+
+  if (!room) {
+    return res.status(404).json({ error: 'Room not found' });
+  }
+
+  res.json(toPublicRoom(room));
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
