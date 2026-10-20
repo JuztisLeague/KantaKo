@@ -56,3 +56,8 @@ export function addSong(room, song) {
   room.queue.push(entry);
   return entry;
   }
+
+  export function nextSong(room) {
+  room.current = room.queue.shift() ?? null;
+  return room.current;
+}

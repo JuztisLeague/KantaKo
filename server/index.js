@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
-import { createRoom, getRoom, toPublicRoom, addSong } from './rooms.js';
+import { createRoom, getRoom, toPublicRoom, addSong, nextSong } from './rooms.js';
 
 const app = express();
 const PORT = 3001;
@@ -115,7 +115,41 @@ app.post('/api/rooms/:code/queue', (req, res) => {
   res.status(201).json(toPublicRoom(room));
 });
 
+function isHost(room, req) {
+  return req.get('x-host-token') === room.hostToken;
+}
+
+app.post('/api/rooms/:code/next', (req, res) => {
+  const room = getRoom(req.params.code);
+
+  if (!room) {
+    return res.status(404).json({ error: 'Room not found' });
+  }
+
+  if (!isHost(room, req)) {
+    return res.status(403).json({ error: 'Only the host can do this' });
+  }
+
+  nextSong(room);
+  res.json(toPublicRoom(room));
+});
+
+app.post('/api/rooms/:code/stop', (req, res) => {
+  const room = getRoom(req.params.code);
+
+  if (!room) {
+    return res.status(404).json({ error: 'Room not found' });
+  }
+
+  if (!isHost(room, req)) {
+    return res.status(403).json({ error: 'Only the host can do this' });
+  }
+
+  room.current = null;
+  res.json(toPublicRoom(room));
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
