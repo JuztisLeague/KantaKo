@@ -43,3 +43,16 @@ export function toPublicRoom(room) {
     current: room.current,
   };
 }
+
+export function addSong(room, song) {
+    const entry = {
+    videoId: song.videoId,
+    title: song.title,
+    thumbnail: song.thumbnail,
+    channel: song.channel,
+    userName: song.userName,
+  };
+
+  room.queue.push(entry);
+  return entry;
+  }

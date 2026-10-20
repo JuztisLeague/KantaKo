@@ -1,10 +1,11 @@
 import 'dotenv/config';
 import express from 'express';
-import { createRoom, getRoom, toPublicRoom } from './rooms.js';
+import { createRoom, getRoom, toPublicRoom, addSong } from './rooms.js';
 
 const app = express();
 const PORT = 3001;
 const API_KEY = process.env.YOUTUBE_API_KEY;
+const MAX_QUEUE = 50;
 
 app.use(express.json()); 
 
@@ -81,6 +82,37 @@ app.get('/api/rooms/:code', (req, res) => {
   }
 
   res.json(toPublicRoom(room));
+});
+
+app.post('/api/rooms/:code/queue', (req, res) => {
+  const room = getRoom(req.params.code);
+
+  if (!room) {
+    return res.status(404).json({ error: 'Room not found' });
+  }
+
+  const videoId = String(req.body?.videoId ?? '').trim();
+  const title = String(req.body?.title ?? '').trim();
+  const thumbnail = String(req.body?.thumbnail ?? '').trim();
+  const channel = String(req.body?.channel ?? '').trim();
+  const userName = String(req.body?.userName ?? '').trim();
+
+  if (!videoId || !title || !userName) {
+    return res
+      .status(400)
+      .json({ error: 'videoId, title and userName are required' });
+  }
+
+  if (videoId.length > 20 || title.length > 200 || userName.length > 30) {
+    return res.status(400).json({ error: 'A field is too long' });
+  }
+
+  if (room.queue.length >= MAX_QUEUE) {
+    return res.status(429).json({ error: 'The queue is full' });
+  }
+
+  addSong(room, { videoId, title, thumbnail, channel, userName });
+  res.status(201).json(toPublicRoom(room));
 });
 
 
