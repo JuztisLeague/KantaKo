@@ -9,16 +9,33 @@ function Home() {
   const [roomCode, setRoomCode] = useState("");
   const [createdRoom, setCreatedRoom] = useState(null);
   const [joinMessage, setJoinMessage] = useState(null);
-   const navigate = useNavigate();
-function handleCreateRoom() {
+  const navigate = useNavigate();
+
+async function handleCreateRoom() {
   
   if (!roomName.trim()){
     setCreatedRoom(`Room not created due to no name`);
     return;
   }
  
-  const code = generateRoomCode();
-  navigate(`/room/${code}`, { state: { roomName } });
+try {
+    const res = await fetch('/api/rooms', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: roomName.trim() }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      setCreatedRoom(data.error || 'Could not create the room');
+      return;
+    }
+
+    localStorage.setItem(`hostToken:${data.code}`, data.hostToken);
+    navigate(`/room/${data.code}`, { state: { roomName: roomName.trim() } });
+  } catch {
+    setCreatedRoom('Could not reach the server');
+  }
 }
 
 function handleJoinRoom(){
