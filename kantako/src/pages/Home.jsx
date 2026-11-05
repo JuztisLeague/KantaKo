@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {UserRoundPlus,  DoorClosedCog} from 'lucide-react';
-import generateRoomCode from '../utils/generateRoomCode';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
 
@@ -9,6 +8,7 @@ function Home() {
   const [roomCode, setRoomCode] = useState("");
   const [createdRoom, setCreatedRoom] = useState(null);
   const [joinMessage, setJoinMessage] = useState(null);
+  const [userName, setUserName] = useState("");
   const navigate = useNavigate();
 
 async function handleCreateRoom() {
@@ -32,25 +32,47 @@ try {
     }
 
     localStorage.setItem(`hostToken:${data.code}`, data.hostToken);
-    navigate(`/room/${data.code}`, { state: { roomName: roomName.trim() } });
+    navigate(`/room/${data.code}`);
   } catch {
     setCreatedRoom('Could not reach the server');
   }
 }
 
-function handleJoinRoom(){
+async function handleJoinRoom(){
 
- if (!roomCode.trim()) {
+   const code = roomCode.trim().toUpperCase();
+   const name = userName.trim();
+
+   
+ if (!code) {
   setJoinMessage("Please enter a room code");
   return;
 }
-  // TEMP: only checks the length until the backend can verify real rooms
-  const code = roomCode.trim().toUpperCase();
-  if (code.length !== 6) {
-  setJoinMessage(`Invalid Room Code`);
+
+ if (!name) {
+  setJoinMessage("Please enter your name");
   return;
- }
- navigate(`/room/${code}`);
+}
+
+  
+ try {
+    const res = await fetch(`/api/rooms/${code}`);
+
+    if (res.status === 404) {
+      setJoinMessage(`Room not found`);
+      return;
+    }
+
+    if (!res.ok) {
+      setJoinMessage(`Something went wrong`);
+      return;
+    }
+
+    const data = await res.json();
+    navigate(`/room/${data.code}/${encodeURIComponent(name)}`);
+  } catch {
+    setJoinMessage(`Could not reach the server`);
+  }
 }
 
 
@@ -79,8 +101,17 @@ function handleJoinRoom(){
             onChange={(e) => 
             setRoomCode(e.target.value)}
             placeholder="Room Code" />
+
+            <input 
+            value={userName}
+            onChange={(e) => 
+            setUserName(e.target.value)}
+            placeholder="Your Name"
+            maxLength={30} />
+
             <button onClick={handleJoinRoom}>Join Room</button>
             {joinMessage && <p className='message'>{joinMessage}</p>}
+
       </div>
       </div>
     </div>
