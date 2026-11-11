@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import { readFile } from 'node:fs/promises';
 import { createRoom, getRoom, toPublicRoom, addSong, nextSong } from './rooms.js';
 
 const app = express();
@@ -25,6 +26,13 @@ app.get('/api/search', async (req, res) => {
     return res.status(400).json({ error: 'Search query is required' });
   }
 
+  if (process.env.USE_MOCK === 'true') {
+    const mock = JSON.parse(
+      await readFile(new URL('./mockResults.json', import.meta.url), 'utf8')
+    );
+    return res.json(mock);
+  }
+  
   const params = new URLSearchParams({
     part: 'snippet',
     type: 'video',
