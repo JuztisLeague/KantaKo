@@ -37,6 +37,31 @@ function Guest() {
     }
 
    }
+   
+   async function handleAdd(song) {
+  try {
+    const res = await fetch(`/api/rooms/${roomId}/queue`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        videoId: song.videoId,
+        title: song.title,
+        thumbnail: song.thumbnail,
+        channel: song.channel,
+        userName,
+      }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      setMessage(data.error || 'Could not add the song');
+      return;
+    }
+    setMessage(`Added "${song.title}"`);
+  } catch {
+   setMessage('Could not reach the server');
+  }
+}
   
 
   return (
@@ -62,6 +87,7 @@ function Guest() {
             <img src={song.thumbnail} alt="" />
             <div>{song.title}</div>
             <div>{song.channel}</div>
+            <button onClick={() => handleAdd(song)}>Add to Queue</button>
           </li>
         ))}
       </ul>
